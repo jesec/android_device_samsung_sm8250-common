@@ -17,6 +17,7 @@
 #define LOG_TAG "FingerprintInscreenService"
 
 #include "FingerprintInscreen.h"
+#include "FingerprintRequests.h"
 
 #include <android-base/logging.h>
 #include <hidl/HidlTransportSupport.h>
@@ -78,6 +79,31 @@ FingerprintInscreen::FingerprintInscreen() {
 #ifdef FOD_SET_RECT
     set(TSP_CMD_PATH, FOD_SET_RECT);
 #endif
+}
+
+int FingerprintInscreen::request(int cmd, int param,
+        hidl_vec<int8_t> input, hidl_vec<int8_t> output) {
+    int result = -2;
+    sp<ISehBiometricsFingerprint> service = ISehBiometricsFingerprint::getService();
+
+    // Create empty input vector
+    hidl_vec<int8_t> inVector;
+
+    // Use input vector if exists
+    if (input != NULL)
+        inVector = input;
+
+    service->sehRequest(cmd, param, inVector,
+        [&](int ret, const hidl_vec<int8_t>& outBuf) {
+            result = ret;
+            if (output != NULL) {
+                output = outBuf;
+            }
+        }
+    );
+
+    LOG(ERROR) << "request: cmd: " << cmd << ", param: " << param << ", result: " << result;
+    return result;
 }
 
 Return<void> FingerprintInscreen::onStartEnroll() { return Void(); }

@@ -32,7 +32,8 @@ LOCAL_SHARED_LIBRARIES := \
     liblog \
     libhwbinder \
     libutils \
-    vendor.lineage.biometrics.fingerprint.inscreen@1.0
+    vendor.lineage.biometrics.fingerprint.inscreen@1.0 \
+    vendor.samsung.hardware.biometrics.fingerprint@3.0
 
 LOCAL_REQUIRED_MODULES := \
     vendor.lineage.biometrics.fingerprint.inscreen@1.0-service.samsung.rc
